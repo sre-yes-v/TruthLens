@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+/* ============================================================
+   TruthLens design tokens
+
+   These values are lifted directly from `docs/truthlens_prototype.html`
+   (its `:root` block). Tailwind v4 is CSS-first: everything declared in
+   `@theme` below is turned into utility classes automatically, so
+   `--color-blue` gives us `bg-blue`, `text-blue`, `border-blue`, and so on.
+
+   This is the ONLY place colours, radii and shadows are defined. If the
+   design changes, it changes here — not in 60 components.
+   ============================================================ */
+@theme {
+  /* -- brand / primary ------------------------------------- */
+  --color-blue: #1877f2;
+  --color-blue-hover: #166fe5;
+  --color-blue-press: #1461cc;
+  --color-blue-tint: #ebf3ff; /* icon chips, info banners */
+  --color-blue-wash: #f7fbff; /* hover backgrounds */
+
+  /* -- surfaces -------------------------------------------- */
+  --color-page: #f0f2f5;
+  --color-card: #ffffff;
+
+  /* -- text ------------------------------------------------ */
+  --color-ink: #050505; /* primary text */
+  --color-ink-2: #65676b; /* secondary text */
+  --color-ink-3: #8a8d91; /* tertiary / hint text */
+
+  /* -- lines & neutral fills ------------------------------- */
+  --color-divider: #ced0d4;
+  --color-divider-2: #e4e6eb;
+  --color-grey: #e4e6eb;
+  --color-grey-hover: #d8dadf;
+
+  /* -- semantic states (green → amber → orange → red) ------- */
+  --color-green: #31a24c;
+  --color-green-bg: #e7f4ea;
+  --color-green-ink: #1c5f30;
+  --color-amber: #f5a623;
+  --color-amber-bg: #fef3e2;
+  --color-amber-ink: #7a5200;
+  --color-amber-ink-2: #a86e00;
+  --color-orange: #f26b21;
+  --color-orange-bg: #fdede3;
+  --color-red: #e41e3f;
+  --color-red-bg: #fdecee;
+  --color-red-ink: #8a1327;
+
+  /* -- disclaimer bar (its own warm tone in the prototype) -- */
+  --color-disclaimer-bg: #fff8e7;
+  --color-disclaimer-border: #f3e2ae;
+  --color-disclaimer-ink: #7a5b00;
+
+  /* -- radii ----------------------------------------------- */
+  --radius-card: 10px;
+  --radius-btn: 8px;
+  --radius-input: 10px;
+  --radius-modal: 14px;
+  --radius-drop: 16px;
+
+  /* -- shadows --------------------------------------------- */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.1), 0 0 0 1px rgb(0 0 0 / 0.03);
+  --shadow-lift: 0 12px 28px rgb(0 0 0 / 0.18);
+
+  /* -- typography ------------------------------------------ */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* -- layout widths (prototype: --maxw / --maxw-wide) ------ */
+  --container-reading: 760px;
+  --container-wide: 940px;
+}
+
+/* ============================================================
+   Base layer — the handful of global rules the prototype sets on
+   bare elements. Everything else is a utility class on a component.
+   ============================================================ */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background: var(--color-page);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    /* The prototype's base text size is 15px. It is set on `body` rather
+       than `html` deliberately: `rem` stays anchored to the browser's 16px
+       root, so Tailwind's spacing scale (p-4 = 16px) keeps its usual values
+       and only text inherits 15px. */
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Visible focus ring for keyboard users on every interactive element.
+     Mouse users don't see it (`:focus-visible`, not `:focus`). */
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+/* ============================================================
+   Motion
+
+   The prototype checks `prefers-reduced-motion` before animating.
+   We honour the same preference globally: users who ask their OS for
+   less motion get instant state changes instead of transitions.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   Two keyframes used by more than one component.
+   Component-specific animation stays in the component.
+   ============================================================ */
+@keyframes tl-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@utility animate-fade-in {
+  animation: tl-fade-in 0.18s ease;
+}
+
+@utility animate-spin-slow {
+  animation: tl-spin 0.7s linear infinite;
+}
+
+/* Sample-image placeholder gradients from the prototype.
+   Used only where no real image URL is available (see
+   docs/implementation-notes.md — the SRS defines no image endpoint). */
+@utility ph-street {
+  background: linear-gradient(160deg, #8ea6c4, #c9b79b 60%, #6b7d8c);
+}
+@utility ph-hill {
+  background: linear-gradient(160deg, #a7c9a0, #7fae86 55%, #4f7d63);
+}
+@utility ph-portrait {
+  background: linear-gradient(160deg, #d9b8c6, #b58fae 55%, #8a6b96);
+}
+@utility ph-scan {
+  background: linear-gradient(160deg, #e2ded2, #cfc9b8 60%, #b6ad97);
+}
+@utility ph-generic {
+  background: linear-gradient(160deg, #c3ccd6, #aab6c2);
+}
