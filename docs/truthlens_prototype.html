@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TruthLens — Clickable Prototype</title>
+<style>
+  /* ============================================================
+     TruthLens · UI/UX prototype (mock only, no backend)
+     Visual language: Facebook/Meta web  ·  Layout: ChatGPT/Google-minimal
+     ============================================================ */
+
+  :root{
+    --blue:#1877F2; --blue-hover:#166FE5; --blue-press:#1461CC;
+    --bg:#F0F2F5; --card:#FFFFFF;
+    --text:#050505; --text-2:#65676B; --text-3:#8A8D91;
+    --divider:#CED0D4; --divider-2:#E4E6EB;
+    --grey:#E4E6EB; --grey-hover:#D8DADF;
+    --green:#31A24C; --green-bg:#E7F4EA;
+    --amber:#F5A623; --amber-bg:#FEF3E2;
+    --orange:#F26B21; --orange-bg:#FDEDE3;
+    --red:#E41E3F; --red-bg:#FDECEE;
+    --r-card:10px; --r-btn:8px; --r-input:10px; --r-pill:999px;
+    --sh:0 1px 2px rgba(0,0,0,.10),0 0 0 1px rgba(0,0,0,.03);
+    --sh-lift:0 12px 28px rgba(0,0,0,.18);
+    --maxw:760px; --maxw-wide:940px;
+    --font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--font); font-size:15px; line-height:1.5;
+    color:var(--text); background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  button{font-family:inherit;font-size:inherit;cursor:pointer}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:40;height:56px;background:var(--card);
+    box-shadow:0 1px 0 var(--divider-2);
+    display:flex;align-items:center;gap:12px;padding:0 16px;
+  }
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:19px;letter-spacing:-.3px}
+  .brand .glyph{width:26px;height:26px;display:block}
+  .brand small{font-weight:600;color:var(--text-2);font-size:12px;background:var(--grey);padding:2px 7px;border-radius:var(--r-pill);letter-spacing:0}
+  .topbar .sp{flex:1}
+  .topbar-actions{display:flex;align-items:center;gap:8px}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    border:none;border-radius:var(--r-btn);padding:9px 16px;font-weight:600;
+    background:var(--grey);color:var(--text);transition:background .12s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{background:var(--grey-hover)}
+  .btn.primary{background:var(--blue);color:#fff}
+  .btn.primary:hover{background:var(--blue-hover)}
+  .btn.primary:active{background:var(--blue-press)}
+  .btn.ghost{background:transparent;color:var(--text-2)}
+  .btn.ghost:hover{background:var(--grey)}
+  .btn.danger{background:var(--red);color:#fff}
+  .btn.lg{padding:13px 22px;font-size:16px}
+  .btn.sm{padding:6px 12px;font-size:13px}
+  .btn:disabled,.btn.is-disabled{background:var(--grey);color:var(--text-3);cursor:not-allowed}
+  .btn .chev{font-size:11px;opacity:.8}
+  .icon-btn{width:38px;height:38px;border-radius:var(--r-pill);background:var(--grey);border:none;display:inline-flex;align-items:center;justify-content:center}
+  .icon-btn:hover{background:var(--grey-hover)}
+
+  /* ---------- screens ---------- */
+  .screen{display:none;min-height:calc(100vh - 56px)}
+  .screen.active{display:block;animation:fade .18s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:28px 20px 96px}
+  .wrap.wide{max-width:var(--maxw-wide)}
+
+  .card{background:var(--card);border-radius:var(--r-card);box-shadow:var(--sh)}
+  .pad{padding:22px}
+  .muted{color:var(--text-2)}
+  .tiny{font-size:13px}
+  .center{text-align:center}
+  h1{font-size:30px;letter-spacing:-.5px;margin:0 0 8px}
+  h2{font-size:20px;letter-spacing:-.3px;margin:0}
+  h3{font-size:16px;margin:0}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-2)}
+
+  /* ---------- landing (Google/ChatGPT-minimal) ---------- */
+  .hero{max-width:640px;margin:0 auto;padding:64px 20px 40px;text-align:center}
+  .hero .biglens{width:64px;height:64px;margin:0 auto 20px;display:block}
+  .hero p.lede{font-size:18px;color:var(--text-2);margin:0 auto 30px;max-width:520px}
+  .drop{
+    background:var(--card);border:2px dashed var(--divider);border-radius:16px;
+    padding:40px 24px;text-align:center;transition:border-color .15s,background .15s;cursor:pointer;
+  }
+  .drop:hover{border-color:var(--blue);background:#F7FBFF}
+  .drop .up-ic{width:44px;height:44px;margin:0 auto 12px;display:block;color:var(--text-3)}
+  .drop .big{font-weight:600;font-size:16px}
+  .drop .hint{color:var(--text-3);font-size:13px;margin-top:6px}
+
+  .samples{margin-top:22px}
+  .samples .lbl{font-size:13px;color:var(--text-2);margin-bottom:10px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .chip{
+    display:inline-flex;align-items:center;gap:7px;background:var(--card);
+    border:1px solid var(--divider-2);border-radius:var(--r-pill);
+    padding:8px 14px;font-size:13px;font-weight:500;color:var(--text);box-shadow:var(--sh);
+    transition:background .12s,border-color .12s;
+  }
+  .chip:hover{background:#F7FBFF;border-color:var(--blue)}
+  .chip .dot{width:8px;height:8px;border-radius:50%}
+
+  /* selected-file state */
+  .filecard{display:flex;align-items:center;gap:14px;text-align:left}
+  .thumb{width:56px;height:56px;border-radius:10px;flex:none;background:#dfe3e8;overflow:hidden;position:relative}
+  .thumb .photo{position:absolute;inset:0}
+  .fmeta{flex:1;min-width:0}
+  .fmeta .fn{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fmeta .fs{color:var(--text-2);font-size:13px}
+
+  .consent{display:flex;gap:11px;align-items:flex-start;margin-top:18px;text-align:left}
+  .consent input{width:18px;height:18px;margin-top:2px;accent-color:var(--blue);flex:none}
+  .consent .ctext{font-size:14px;color:var(--text-2)}
+
+  /* inline error / info banners */
+  .banner{display:flex;gap:11px;align-items:flex-start;border-radius:10px;padding:13px 15px;font-size:14px;margin-top:16px}
+  .banner .bi{flex:none;width:20px;height:20px;margin-top:1px}
+  .banner.err{background:var(--red-bg);color:#8a1327}
+  .banner.warn{background:var(--amber-bg);color:#7a5200}
+  .banner.info{background:#EBF3FF;color:#0a4bad}
+  .banner.ok{background:var(--green-bg);color:#1c5f30}
+  .banner b{font-weight:700}
+
+  .disclaimer-strip{max-width:640px;margin:26px auto 0;text-align:center;color:var(--text-3);font-size:12.5px;line-height:1.5}
+
+  /* ---------- analyzing (stepper) ---------- */
+  .analyze-head{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+  .analyze-head .thumb{width:64px;height:64px}
+  .progress-line{height:6px;background:var(--divider-2);border-radius:99px;overflow:hidden;margin:18px 0 6px}
+  .progress-line > i{display:block;height:100%;width:0;background:var(--blue);border-radius:99px;transition:width .35s ease}
+  .pct{font-size:13px;color:var(--text-2)}
+  .status-live{font-size:15px;font-weight:600;margin:2px 0 20px}
+  .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+  .steps li{display:flex;align-items:center;gap:13px;padding:11px 8px;border-radius:8px;color:var(--text-2)}
+  .steps li .mk{
+    width:24px;height:24px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    border:2px solid var(--divider);background:#fff;font-size:12px;color:var(--text-3);transition:.2s
+  }
+  .steps li.done{color:var(--text)}
+  .steps li.done .mk{background:var(--blue);border-color:var(--blue);color:#fff}
+  .steps li.active{color:var(--text);background:#F7FBFF}
+  .steps li.active .mk{border-color:var(--blue);border-top-color:transparent;animation:spin .7s linear infinite}
+  .steps li.warn{color:var(--text)}
+  .steps li.warn .mk{background:var(--amber);border-color:var(--amber);color:#fff}
+  .steps li .lbl{flex:1}
+  .steps li .st{font-size:12.5px;color:var(--text-3)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .sanitize-lock{display:flex;align-items:center;gap:8px;margin-top:20px;color:var(--text-3);font-size:13px}
+
+  /* ---------- report ---------- */
+  .report-top{position:sticky;top:56px;z-index:30;background:var(--bg);padding-top:6px}
+  .discbar{
+    background:#FFF8E7;border:1px solid #F3E2AE;color:#7a5b00;border-radius:10px;
+    padding:11px 15px;font-size:13.5px;display:flex;gap:10px;align-items:center;margin-bottom:16px
+  }
+  .discbar svg{flex:none}
+  .report-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+  .report-actions .sp{flex:1}
+  .report-meta{color:var(--text-3);font-size:12.5px;margin-bottom:14px}
+
+  .summary{display:grid;grid-template-columns:220px 1fr;gap:18px}
+  @media(max-width:680px){.summary{grid-template-columns:1fr}}
+  .score-hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px}
+  .ring{position:relative;width:150px;height:150px}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring .val b{font-size:40px;line-height:1;letter-spacing:-1px}
+  .ring .val span{font-size:12px;color:var(--text-3);margin-top:3px}
+  .level{margin-top:14px;font-weight:700;font-size:17px}
+  .conf{font-size:13px;color:var(--text-2);margin-top:2px}
+
+  .subscores{display:flex;flex-direction:column;gap:12px;justify-content:center}
+  .sub{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--divider-2);border-radius:10px}
+  .sub .k{font-size:13px;color:var(--text-2)}
+  .sub .v{font-weight:700;font-size:18px}
+  .sub .bar{flex:1;height:8px;background:var(--divider-2);border-radius:99px;overflow:hidden}
+  .sub .bar > i{display:block;height:100%;border-radius:99px}
+  .sub .band{font-size:12px;font-weight:600;padding:2px 9px;border-radius:var(--r-pill)}
+
+  .band-low{background:var(--green-bg);color:var(--green)}
+  .band-mod{background:var(--amber-bg);color:#a86e00}
+  .band-high{background:var(--orange-bg);color:var(--orange)}
+  .band-crit{background:var(--red-bg);color:var(--red)}
+  .dot-low{background:var(--green)} .dot-mod{background:var(--amber)} .dot-high{background:var(--orange)} .dot-crit{background:var(--red)} .dot-neutral{background:var(--blue)}
+
+  /* accordion evidence sections */
+  .sections{margin-top:20px;display:flex;flex-direction:column;gap:12px}
+  .acc{background:var(--card);border-radius:var(--r-card);box-shadow:var(--sh);overflow:hidden}
+  .acc-h{display:flex;align-items:center;gap:14px;padding:16px 18px;width:100%;background:none;border:none;text-align:left}
+  .acc-h:hover{background:#FAFBFC}
+  .acc-ic{width:40px;height:40px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;background:#EBF3FF;color:var(--blue)}
+  .acc-tt{flex:1;min-width:0}
+  .acc-tt .t{font-weight:600}
+  .acc-tt .s{font-size:13px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .acc-tag{font-size:12px;font-weight:600;padding:3px 10px;border-radius:var(--r-pill);flex:none}
+  .acc-chev{color:var(--text-3);transition:transform .2s;flex:none}
+  .acc.open .acc-chev{transform:rotate(180deg)}
+  .acc-body{display:none;padding:0 18px 20px;border-top:1px solid var(--divider-2)}
+  .acc.open .acc-body{display:block;animation:fade .18s ease}
+  .acc-body .inner{padding-top:16px}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:640px){.cols{grid-template-columns:1fr}}
+  .field-label{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3);margin-bottom:8px}
+
+  .kvlist{font-size:14px}
+  .kvlist div{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dashed var(--divider-2)}
+  .kvlist div:last-child{border-bottom:none}
+  .kvlist .k{color:var(--text-2)}
+  .kvlist .v2{font-weight:600;text-align:right}
+
+  ul.findings{list-style:none;margin:0;padding:0}
+  ul.findings li{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px dashed var(--divider-2);font-size:14px}
+  ul.findings li:last-child{border-bottom:none}
+  .tag{font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:2px 8px;border-radius:var(--r-pill);background:var(--grey);color:var(--text-2);flex:none;margin-top:1px}
+  .tag.warn{background:var(--amber-bg);color:#a86e00}
+  .tag.crit{background:var(--red-bg);color:var(--red)}
+
+  /* detection image w/ boxes */
+  .detimg{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:4/3;background:#c9cdd3;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+  .detimg .photo{position:absolute;inset:0}
+  .bbox{position:absolute;border:2px solid #fff;border-radius:4px;box-shadow:0 0 0 2px rgba(0,0,0,.35)}
+  .bbox .cap{position:absolute;top:-9px;left:-2px;transform:translateY(-100%);background:#050505cc;color:#fff;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap}
+  .bbox.blurred{backdrop-filter:blur(9px);background:rgba(255,255,255,.25);border-style:solid}
+  .redact{position:absolute;background:#111;border-radius:4px}
+
+  .signals{list-style:none;margin:0;padding:0}
+  .signals li{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;border-bottom:1px dashed var(--divider-2)}
+  .signals li:last-child{border-bottom:none}
+  .sig-arrow{font-weight:700;width:20px;text-align:center}
+  .sig-up{color:var(--red)} .sig-down{color:var(--green)}
+
+  .evchain{list-style:none;margin:0;padding:0}
+  .evchain li{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--divider-2);font-size:14px}
+  .evchain li:last-child{border-bottom:none}
+  .ev-conf{font-size:11px;font-weight:700;padding:2px 8px;border-radius:var(--r-pill);flex:none}
+  .ev-h{background:var(--green-bg);color:var(--green)} .ev-l{background:var(--grey);color:var(--text-2)}
+  .region-rank{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+  .rr{display:flex;align-items:center;gap:12px}
+  .rr .name{width:130px;font-weight:600}
+  .rr .barwrap{flex:1;height:10px;background:var(--divider-2);border-radius:99px;overflow:hidden}
+  .rr .barwrap i{display:block;height:100%;background:var(--blue);border-radius:99px}
+  .rr .p{width:44px;text-align:right;font-weight:600;font-size:13px}
+
+  .mini-disc{background:#F7F8FA;border:1px solid var(--divider-2);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text-2);display:flex;gap:10px;align-items:flex-start;margin-top:14px}
+
+  .rec-list{list-style:none;margin:0;padding:0}
+  .rec-list li{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--divider-2);align-items:flex-start}
+  .rec-list li:last-child{border-bottom:none}
+  .rec-ic{width:30px;height:30px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center}
+  .rec-primary .rec-ic{background:var(--red-bg);color:var(--red)}
+  .rec-info .rec-ic{background:#EBF3FF;color:var(--blue)}
+  .rec-ok .rec-ic{background:var(--green-bg);color:var(--green)}
+
+  .empty{text-align:center;padding:26px;color:var(--text-3)}
+  .empty svg{margin:0 auto 8px;display:block}
+
+  /* degraded engine notice inside a section */
+  .degraded{background:var(--amber-bg);border:1px solid #f3d999;border-radius:10px;padding:14px;font-size:14px;color:#7a5200;display:flex;gap:11px;align-items:flex-start}
+
+  /* ---------- sanitize ---------- */
+  .san-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:640px){.san-grid{grid-template-columns:1fr}}
+  .san-panel .cap{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-3);margin-bottom:8px;display:flex;justify-content:space-between}
+  .san-summary{list-style:none;margin:0;padding:0}
+  .san-summary li{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px dashed var(--divider-2);font-size:14px}
+  .san-summary li:last-child{border-bottom:none}
+  .check{width:22px;height:22px;border-radius:50%;background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center;flex:none}
+
+  /* ---------- failure / expired full screens ---------- */
+  .state-screen{max-width:520px;margin:0 auto;padding:80px 20px;text-align:center}
+  .state-ic{width:66px;height:66px;margin:0 auto 20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+  .state-ic.err{background:var(--red-bg);color:var(--red)}
+  .state-ic.expired{background:var(--grey);color:var(--text-2)}
+  .state-screen h1{font-size:24px}
+  .state-screen p{color:var(--text-2);margin:8px 0 24px}
+  .state-code{display:inline-block;font-family:ui-monospace,monospace;font-size:12px;background:var(--grey);color:var(--text-2);padding:4px 10px;border-radius:6px;margin-top:18px}
+
+  /* ---------- admin ---------- */
+  .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.admin-grid{grid-template-columns:1fr}}
+  .stat-big{font-size:30px;font-weight:700;letter-spacing:-.5px}
+  .logtable{width:100%;border-collapse:collapse;font-size:13px;font-family:ui-monospace,monospace}
+  .logtable th{text-align:left;color:var(--text-3);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--divider-2);font-family:var(--font)}
+  .logtable td{padding:8px 10px;border-bottom:1px dashed var(--divider-2);color:var(--text-2)}
+  .logtable tr:last-child td{border-bottom:none}
+  .badge-fail{color:var(--red);font-weight:600}
+  .badge-ok{color:var(--green);font-weight:600}
+  .health-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--green);margin-right:6px}
+
+  /* ---------- modal ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60;display:none;align-items:center;justify-content:center;padding:20px}
+  .overlay.show{display:flex;animation:fade .15s ease}
+  .modal{background:var(--card);border-radius:14px;max-width:460px;width:100%;box-shadow:var(--sh-lift);overflow:hidden}
+  .modal-h{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--divider-2)}
+  .modal-h h3{font-size:18px}
+  .modal-b{padding:20px}
+  .opt-row{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--divider-2);border-radius:10px;margin-bottom:10px;cursor:pointer;transition:.12s}
+  .opt-row:hover{border-color:var(--blue);background:#F7FBFF}
+  .opt-ic{width:40px;height:40px;border-radius:8px;background:#EBF3FF;color:var(--blue);display:flex;align-items:center;justify-content:center;flex:none}
+  .opt-row .t{font-weight:600}
+  .opt-row .d{font-size:13px;color:var(--text-2)}
+
+  /* ---------- toast ---------- */
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);z-index:80;
+    background:#050505;color:#fff;padding:13px 20px;border-radius:10px;font-size:14px;font-weight:500;
+    display:flex;align-items:center;gap:10px;opacity:0;pointer-events:none;transition:.25s;box-shadow:var(--sh-lift)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast .tk{color:#5ad07f}
+
+  /* ---------- prototype map (reviewer aid) ---------- */
+  .pm-fab{position:fixed;right:20px;bottom:20px;z-index:70;background:#050505;color:#fff;border:none;
+    border-radius:var(--r-pill);padding:11px 16px;font-weight:600;font-size:13px;box-shadow:var(--sh-lift);display:flex;align-items:center;gap:8px}
+  .pm-panel{position:fixed;right:20px;bottom:72px;z-index:70;width:290px;max-height:70vh;overflow:auto;
+    background:var(--card);border-radius:14px;box-shadow:var(--sh-lift);display:none}
+  .pm-panel.show{display:block}
+  .pm-panel h4{margin:0;padding:15px 18px 6px;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:var(--text-3)}
+  .pm-panel .pm-note{padding:0 18px 8px;font-size:12px;color:var(--text-3)}
+  .pm-panel button.pm-link{display:block;width:100%;text-align:left;background:none;border:none;padding:9px 18px;font-size:13.5px;color:var(--text);border-top:1px solid var(--divider-2)}
+  .pm-panel button.pm-link:hover{background:#F7FBFF;color:var(--blue)}
+  .pm-panel .pm-sec{padding:12px 18px 4px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-3);border-top:1px solid var(--divider-2)}
+
+  /* footer link row on landing */
+  .foot{max-width:640px;margin:40px auto 0;text-align:center;font-size:12.5px;color:var(--text-3)}
+  .foot a{color:var(--text-2);margin:0 8px}
+
+  /* sample photo gradients */
+  .ph-street{background:linear-gradient(160deg,#8ea6c4,#c9b79b 60%,#6b7d8c)}
+  .ph-hill{background:linear-gradient(160deg,#a7c9a0,#7fae86 55%,#4f7d63)}
+  .ph-portrait{background:linear-gradient(160deg,#d9b8c6,#b58fae 55%,#8a6b96)}
+  .ph-scan{background:linear-gradient(160deg,#e2ded2,#cfc9b8 60%,#b6ad97)}
+  .ph-generic{background:linear-gradient(160deg,#c3ccd6,#aab6c2)}
+</style>
+</head>
+<body>
+
+<!-- ===================== TOP BAR ===================== -->
+<header class="topbar">
+  <button class="brand" onclick="go('landing')" style="background:none;border:none;padding:0" aria-label="TruthLens home">
+    <svg class="glyph" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" fill="#1877F2"/><circle cx="16" cy="16" r="7" fill="#fff"/><circle cx="16" cy="16" r="3" fill="#1877F2"/><circle cx="21.5" cy="10.5" r="1.6" fill="#fff"/></svg>
+    <span>TruthLens <small>Prototype</small></span>
+  </button>
+  <div class="sp"></div>
+  <div class="topbar-actions" id="topActions">
+    <button class="btn ghost sm" onclick="openModal('modal-privacy')">How images are handled</button>
+    <button class="btn sm" onclick="go('landing')">New analysis</button>
+  </div>
+</header>
+
+<!-- ===================== 1. LANDING / UPLOAD ===================== -->
+<section class="screen active" id="screen-landing">
+  <div class="hero">
+    <svg class="biglens" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" fill="#1877F2"/><circle cx="16" cy="16" r="7.5" fill="#fff"/><circle cx="16" cy="16" r="3.2" fill="#1877F2"/><circle cx="22" cy="10" r="1.8" fill="#fff"/></svg>
+    <h1>Check any image before you trust it</h1>
+    <p class="lede">See what an image reveals about you, and whether it has been edited or AI-generated. One upload, one clear report.</p>
+
+    <!-- empty / dropzone state -->
+    <div id="uploadEmpty">
+      <div class="drop" onclick="selectSample('street')" role="button" tabindex="0"
+           onkeydown="if(event.key==='Enter')selectSample('street')">
+        <svg class="up-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4m0 0L7 9m5-5 5 5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke-linecap="round"/></svg>
+        <div class="big">Drop an image here or browse</div>
+        <div class="hint">JPEG, PNG or WEBP · up to 15 MB</div>
+      </div>
+
+      <div class="samples">
+        <div class="lbl">Or try a sample</div>
+        <div class="chips">
+          <button class="chip" onclick="selectSample('street')"><span class="dot dot-crit"></span>Street photo with ID card</button>
+          <button class="chip" onclick="selectSample('hill')"><span class="dot dot-low"></span>Landscape photo</button>
+          <button class="chip" onclick="selectSample('portrait')"><span class="dot dot-mod"></span>Possibly AI-generated</button>
+          <button class="chip" onclick="selectSample('scan')"><span class="dot dot-mod"></span>Low-quality scan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- file-selected state -->
+    <div id="uploadSelected" style="display:none">
+      <div class="card pad">
+        <div class="filecard">
+          <div class="thumb"><div class="photo" id="selThumb"></div></div>
+          <div class="fmeta">
+            <div class="fn" id="selName">street-scene.jpg</div>
+            <div class="fs" id="selSize">JPEG · 3.2 MB</div>
+          </div>
+          <button class="icon-btn" onclick="clearSelection()" aria-label="Remove image">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+
+        <div id="selError"></div>
+
+        <label class="consent">
+          <input type="checkbox" id="consentBox" onchange="syncAnalyzeBtn()" />
+          <span class="ctext">I understand TruthLens will read this image to extract metadata, text, faces, plates and document types. Nothing is sent to third parties, and the original is deleted after 24 hours. <a href="#" onclick="openModal('modal-privacy');return false">Details</a></span>
+        </label>
+
+        <div style="margin-top:20px;display:flex;gap:10px">
+          <button class="btn primary lg" id="analyzeBtn" style="flex:1" disabled onclick="startAnalysis()">Analyze image</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer-strip">
+      TruthLens gives a probabilistic, evidence-based read — not a legal or certified verdict of authenticity.
+    </div>
+
+    <div class="foot">
+      <a href="#" onclick="openModal('modal-privacy');return false">How images are handled</a>·
+      <a href="#" onclick="go('admin');return false">Admin</a>·
+      <a href="#" onclick="go('expired');return false">View an expired report</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 2. ANALYZING ===================== -->
+<section class="screen" id="screen-analyzing">
+  <div class="wrap">
+    <div class="analyze-head">
+      <div class="thumb"><div class="photo" id="anThumb"></div></div>
+      <div>
+        <h2 id="anTitle">Analyzing your image</h2>
+        <div class="tiny muted" id="anSub">Running 9 checks — this usually takes a few seconds</div>
+      </div>
+    </div>
+
+    <div class="progress-line"><i id="anBar"></i></div>
+    <div class="pct" id="anPct">0%</div>
+    <div class="status-live" id="anStatus" style="margin-top:14px">Starting…</div>
+
+    <div class="card pad" style="padding:12px">
+      <ul class="steps" id="anSteps"></ul>
+    </div>
+
+    <div class="sanitize-lock">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      Sanitizing (blur &amp; strip metadata) unlocks once analysis finishes — so evidence is captured first.
+    </div>
+
+    <div style="margin-top:22px">
+      <button class="btn" onclick="cancelAnalysis()">Cancel</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 3. REPORT ===================== -->
+<section class="screen" id="screen-report">
+  <div class="wrap wide">
+    <div class="report-top">
+      <div class="discbar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>This is a probabilistic assessment based on visible evidence — <b>not a legal verdict</b>. Treat scores as guidance, not proof.</span>
+      </div>
+
+      <div class="report-actions">
+        <span class="eyebrow">Forensic report</span>
+        <span class="sp"></span>
+        <button class="btn" onclick="openModal('modal-download')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12m0 0 4-4m-4 4-4-4M4 20h16" stroke-linecap="round" stroke-linejoin="round"/></svg>Download report<span class="chev">▾</span></button>
+        <button class="btn primary" onclick="startSanitize()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20 20 4M9 5l3-1 2 2-1 3M5 9l-1 3 2 2 3-1" stroke-linecap="round" stroke-linejoin="round"/></svg>Sanitize image</button>
+      </div>
+      <div class="report-meta" id="reportMeta">Analyzed just now · session <span id="rSession">a1b2-c3d4</span> · expires in 24h</div>
+    </div>
+
+    <!-- summary -->
+    <div class="summary">
+      <div class="card score-hero">
+        <div class="ring">
+          <svg width="150" height="150"><circle cx="75" cy="75" r="60" stroke="#E4E6EB" stroke-width="14" fill="none"/><circle id="ringProg" cx="75" cy="75" r="60" stroke="#1877F2" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377"/></svg>
+          <div class="val"><b id="authScore">—</b><span>/ 100</span></div>
+        </div>
+        <div class="level" id="authLevel">—</div>
+        <div class="conf" id="authConf">Authenticity · confidence —</div>
+      </div>
+
+      <div class="subscores">
+        <div class="sub">
+          <span class="dot dot-crit" id="privDot" style="width:10px;height:10px;border-radius:50%;flex:none"></span>
+          <div style="min-width:120px"><div class="k">Privacy risk</div><div class="v" id="privVal">—</div></div>
+          <div class="bar"><i id="privBar" style="background:var(--red)"></i></div>
+          <span class="band band-crit" id="privBand">—</span>
+        </div>
+        <div class="sub">
+          <span class="dot dot-neutral" style="width:10px;height:10px;border-radius:50%;flex:none"></span>
+          <div style="min-width:120px"><div class="k">Manipulation signs</div><div class="v" id="forVal">—</div></div>
+          <div class="bar"><i id="forBar" style="background:var(--blue)"></i></div>
+          <span class="tiny muted" id="forTxt">—</span>
+        </div>
+        <div class="sub">
+          <span class="dot dot-neutral" style="width:10px;height:10px;border-radius:50%;flex:none"></span>
+          <div style="min-width:120px"><div class="k">AI-generated likelihood</div><div class="v" id="aiVal">—</div></div>
+          <div class="bar"><i id="aiBar" style="background:var(--blue)"></i></div>
+          <span class="tiny muted" id="aiTxt">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- evidence sections (accordion) -->
+    <div class="sections" id="reportSections"><!-- injected --></div>
+
+  </div>
+</section>
+
+<!-- ===================== 4. SANITIZE ===================== -->
+<section class="screen" id="screen-sanitize">
+  <div class="wrap">
+    <button class="btn ghost sm" onclick="go('report')" style="margin-bottom:14px">← Back to report</button>
+    <h2>Sanitized image</h2>
+    <div class="tiny muted" style="margin:6px 0 20px">Metadata removed and sensitive regions blurred. Your original report is untouched.</div>
+
+    <div id="sanLoading" class="card pad center" style="display:none">
+      <div class="ring" style="width:54px;height:54px;margin:0 auto 14px">
+        <svg width="54" height="54"><circle cx="27" cy="27" r="22" stroke="#E4E6EB" stroke-width="5" fill="none"/><circle cx="27" cy="27" r="22" stroke="#1877F2" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="90" style="transform-origin:center;animation:spin .8s linear infinite"/></svg>
+      </div>
+      <div class="muted">Stripping metadata and blurring regions…</div>
+    </div>
+
+    <div id="sanResult">
+      <div class="san-grid">
+        <div class="card pad san-panel">
+          <div class="cap"><span>Original</span><span class="muted">reference</span></div>
+          <div class="detimg" id="sanBefore"></div>
+        </div>
+        <div class="card pad san-panel">
+          <div class="cap"><span>Sanitized</span><span style="color:var(--green)">ready</span></div>
+          <div class="detimg" id="sanAfter"></div>
+        </div>
+      </div>
+
+      <div class="card pad" style="margin-top:16px">
+        <div class="field-label">What was changed</div>
+        <ul class="san-summary" id="sanSummary"></ul>
+        <div style="margin-top:18px;display:flex;gap:10px">
+          <button class="btn primary" onclick="toast('Sanitized image downloaded')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12m0 0 4-4m-4 4-4-4M4 20h16" stroke-linecap="round" stroke-linejoin="round"/></svg>Download sanitized image</button>
+          <button class="btn" onclick="go('report')">Back to report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 5. ANALYSIS FAILED (edge) ===================== -->
+<section class="screen" id="screen-failed">
+  <div class="state-screen">
+    <div class="state-ic err"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"/></svg></div>
+    <h1>Analysis couldn't be completed</h1>
+    <p id="failReason">The image was read, but the analysis pipeline stopped before finishing. No report was generated. Try a different image, or the same one again.</p>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button class="btn primary" onclick="go('landing')">Try another image</button>
+      <button class="btn" onclick="openModal('modal-privacy')">Contact support</button>
+    </div>
+    <div class="state-code">session f9a2-71bd · error: pipeline_incomplete</div>
+  </div>
+</section>
+
+<!-- ===================== 6. REPORT EXPIRED (edge) ===================== -->
+<section class="screen" id="screen-expired">
+  <div class="state-screen">
+    <div class="state-ic expired"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h1>This report has expired</h1>
+    <p>Reports and their images are kept for 24 hours, then permanently deleted for privacy. This one is no longer available.</p>
+    <button class="btn primary" onclick="go('landing')">Analyze an image</button>
+    <div class="state-code">session e3d4-9a2c · retention_expired</div>
+  </div>
+</section>
+
+<!-- ===================== 7. ADMIN ===================== -->
+<section class="screen" id="screen-admin">
+  <div class="wrap wide">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <span class="eyebrow">Internal · Admin</span>
+    </div>
+    <h2>System health &amp; logs</h2>
+    <div class="tiny muted" style="margin:6px 0 20px"><span class="health-dot"></span>All engines operational · updated just now</div>
+
+    <div class="admin-grid" style="margin-bottom:14px">
+      <div class="card pad"><div class="k tiny muted">Active sessions</div><div class="stat-big">3 <span class="tiny muted" style="font-weight:400">/ 5 capacity</span></div></div>
+      <div class="card pad"><div class="k tiny muted">Avg pipeline time</div><div class="stat-big">21s</div></div>
+      <div class="card pad"><div class="k tiny muted">Completion rate (24h)</div><div class="stat-big">99.2%</div></div>
+      <div class="card pad"><div class="k tiny muted">Images in retention</div><div class="stat-big">47</div></div>
+    </div>
+
+    <div class="card pad" style="margin-bottom:14px">
+      <div class="field-label">Recent engine failures</div>
+      <ul class="findings">
+        <li><span class="tag warn">OCR</span> Timeout on 8000×6000 image · session f9a2 · 10:14</li>
+        <li><span class="tag warn">Privacy (YOLO)</span> Model load error, auto-retried and recovered · session 2b71 · 09:50</li>
+      </ul>
+    </div>
+
+    <div class="card pad">
+      <div class="field-label">Audit log</div>
+      <table class="logtable">
+        <thead><tr><th>Session</th><th>Stage</th><th>Event</th><th>Time</th></tr></thead>
+        <tbody>
+          <tr><td>a1b2</td><td>report</td><td class="badge-ok">report_ready</td><td>10:22:14</td></tr>
+          <tr><td>a1b2</td><td>scoring</td><td>scoring_done</td><td>10:22:11</td></tr>
+          <tr><td>c3d4</td><td>privacy</td><td class="badge-fail">engine_failed</td><td>10:19:03</td></tr>
+          <tr><td>c3d4</td><td>upload</td><td>upload_received</td><td>10:18:47</td></tr>
+          <tr><td>7f10</td><td>sanitize</td><td class="badge-ok">sanitize_done</td><td>10:15:20</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MODALS ===================== -->
+<div class="overlay" id="modal-privacy">
+  <div class="modal">
+    <div class="modal-h"><h3>How your image is handled</h3><button class="icon-btn" onclick="closeModal('modal-privacy')" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"/></svg></button></div>
+    <div class="modal-b">
+      <ul class="findings">
+        <li><span class="tag">Local</span> Analysis runs on TruthLens servers. Your image is never sent to any third-party service.</li>
+        <li><span class="tag">24h</span> The original image is deleted after 24 hours unless you choose to keep the report.</li>
+        <li><span class="tag">PII</span> Detected personal info appears only in your report — it's never written to general logs.</li>
+        <li><span class="tag">You</span> You can delete the session and everything in it at any time.</li>
+      </ul>
+      <div style="margin-top:16px"><button class="btn primary" style="width:100%" onclick="closeModal('modal-privacy')">Got it</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="modal-download">
+  <div class="modal">
+    <div class="modal-h"><h3>Download report</h3><button class="icon-btn" onclick="closeModal('modal-download')" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"/></svg></button></div>
+    <div class="modal-b">
+      <div class="opt-row" onclick="closeModal('modal-download');toast('Report downloaded (PDF)')">
+        <div class="opt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v6h6"/></svg></div>
+        <div><div class="t">PDF report</div><div class="d">Formatted, readable — for sharing or printing</div></div>
+      </div>
+      <div class="opt-row" onclick="closeModal('modal-download');toast('Report downloaded (JSON)')">
+        <div class="opt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H6a2 2 0 0 0-2 2v4l-2 3 2 3v4a2 2 0 0 0 2 2h2M16 3h2a2 2 0 0 1 2 2v4l2 3-2 3v4a2 2 0 0 1-2 2h-2"/></svg></div>
+        <div><div class="t">JSON data</div><div class="d">Raw structured findings — for developers</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TOAST ===================== -->
+<div class="toast" id="toast"><span class="tk">✓</span><span id="toastMsg">Done</span></div>
+
+<!-- ===================== PROTOTYPE MAP (reviewer aid) ===================== -->
+<button class="pm-fab" onclick="togglePM()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Prototype map</button>
+<div class="pm-panel" id="pmPanel">
+  <h4>Jump to any state</h4>
+  <div class="pm-note">Reviewer aid — not part of the product UI.</div>
+  <div class="pm-sec">Upload</div>
+  <button class="pm-link" onclick="go('landing');closePM()">Landing · empty state</button>
+  <button class="pm-link" onclick="selectSample('street');closePM()">File selected</button>
+  <button class="pm-link" onclick="selectSample('oversized');closePM()">Error · file too large</button>
+  <button class="pm-link" onclick="demoValidationError();closePM()">Error · unreadable file (422)</button>
+  <div class="pm-sec">Analysis</div>
+  <button class="pm-link" onclick="demoAnalyze('street');closePM()">Analyzing · live progress</button>
+  <button class="pm-link" onclick="demoAnalyze('scan');closePM()">Analyzing · engine degraded</button>
+  <button class="pm-link" onclick="demoAnalyze('fail');closePM()">Analysis failed (total)</button>
+  <div class="pm-sec">Report</div>
+  <button class="pm-link" onclick="showReport('hill');closePM()">Report · likely authentic / safe</button>
+  <button class="pm-link" onclick="showReport('street');closePM()">Report · privacy alert (Critical)</button>
+  <button class="pm-link" onclick="showReport('portrait');closePM()">Report · likely AI-generated</button>
+  <button class="pm-link" onclick="showReport('scan');closePM()">Report · with degraded engine</button>
+  <div class="pm-sec">Sanitize &amp; download</div>
+  <button class="pm-link" onclick="showReport('street');startSanitize();closePM()">Sanitize · before/after</button>
+  <button class="pm-link" onclick="showReport('street');openModal('modal-download');closePM()">Download dialog</button>
+  <div class="pm-sec">Edge &amp; other</div>
+  <button class="pm-link" onclick="go('expired');closePM()">Report expired (24h)</button>
+  <button class="pm-link" onclick="go('admin');closePM()">Admin · health &amp; logs</button>
+  <button class="pm-link" onclick="openModal('modal-privacy');closePM()">How images are handled</button>
+</div>
+
+<script>
+/* ============================================================
+   Mock data — three report cases + behaviors. No backend.
+   ============================================================ */
+const PHOTOS = {
+  street:'ph-street', hill:'ph-hill', portrait:'ph-portrait', scan:'ph-scan', generic:'ph-generic'
+};
+const FILES = {
+  street:{name:'street-scene.jpg',   size:'JPEG · 3.2 MB', ph:'street'},
+  hill:{name:'hillside.jpg',         size:'JPEG · 4.1 MB', ph:'hill'},
+  portrait:{name:'portrait-dl.png',  size:'PNG · 1.8 MB',  ph:'portrait'},
+  scan:{name:'faded-scan.jpg',       size:'JPEG · 2.4 MB', ph:'scan'},
+  oversized:{name:'drone-raw.jpg',   size:'JPEG · 22 MB',  ph:'generic', tooBig:true}
+};
+
+const CASES = {
+  /* ---- privacy-heavy, strong Kerala region ---- */
+  street:{
+    session:'a1b2-c3d4', ph:'street',
+    auth:{score:68, level:'Low Concern', conf:'Medium'},
+    priv:{score:88, band:'Critical', cls:'crit'},
+    forensic:{score:24, txt:'Low'},
+    ai:{score:12, txt:'Low · med. confidence'},
+    metadata:{
+      summary:'Camera intact · GPS present · edited: no',
+      tag:{t:'GPS present',c:'crit'},
+      kv:[['Camera','Xiaomi Redmi Note 12'],['GPS','9.9312° N, 76.2673° E'],['Captured','04 Jan 2026, 14:22'],['Editing software','None detected'],['Resolution','4000 × 3000'],['Color profile','sRGB']],
+      indicators:[['crit','GPS location embedded'],['','No editing software found'],['','Capture time matches file time']]
+    },
+    ocr:{
+      summary:'4 sensitive items found',
+      tag:{t:'4 findings',c:'warn'},
+      overlay:'street',
+      findings:[['phone','+91 98••• ••43'],['name','“R. Menon”'],['vehicle','KL07 CE ••21'],['warn','Address (low confidence, 58%)']]
+    },
+    privacy:{
+      summary:'Face ×2 · plate · QR · ID document',
+      tag:{t:'Critical',c:'crit'},
+      overlay:'street', boxes:'street',
+      objects:[['Face × 2','0.94, 0.88'],['Number plate × 1','0.91'],['QR code × 1','0.86'],['Aadhaar-like document × 1','0.79']]
+    },
+    forensic:{
+      summary:'No manipulation signs · single compression',
+      tag:{t:'Low',c:'low'},
+      score:24, region:'None significant', gens:'1 (consistent)', conflict:'None'
+    },
+    ai:{
+      summary:'12% likely AI-generated',
+      tag:{t:'Low',c:'low'}, score:12, conf:'Medium',
+      signals:[['down','Base classifier','15%'],['down','Consistent camera EXIF present',''],['down','Sensor noise typical of a real photo',''],['down','No garbled-text artifacts','']]
+    },
+    region:{
+      summary:'Probable region: Ernakulam',
+      tag:{t:'Ernakulam',c:'low'}, sufficient:true,
+      ranked:[['Ernakulam',74],['Alappuzha',18]],
+      chain:[['h','KL07 plate → Ernakulam district'],['h','STD code 0484 → Ernakulam'],['l','Malayalam text present (corroborating)'],['l','Backwater scene cue (corroborating)']]
+    },
+    recs:[
+      ['primary','This image shows a number plate, two unblurred faces and an ID-like document. Sanitize it before sharing.'],
+      ['primary','GPS coordinates are embedded in the file. Remove metadata to avoid revealing where this was taken.']
+    ]
+  },
+
+  /* ---- clean / likely authentic, insufficient region ---- */
+  hill:{
+    session:'b7e2-4f19', ph:'hill',
+    auth:{score:91, level:'Likely Authentic', conf:'High'},
+    priv:{score:8, band:'Low', cls:'low'},
+    forensic:{score:15, txt:'Low'},
+    ai:{score:6, txt:'Low · high confidence'},
+    metadata:{
+      summary:'Camera intact · no GPS · edited: no',
+      tag:{t:'Clean',c:'low'},
+      kv:[['Camera','Canon EOS 200D'],['GPS','Not embedded'],['Captured','20 Dec 2025, 08:41'],['Editing software','None detected'],['Resolution','6000 × 4000'],['Color profile','Adobe RGB']],
+      indicators:[['','No GPS location'],['','No editing software found'],['','Full camera metadata intact']]
+    },
+    ocr:{ summary:'No readable text found', tag:{t:'None',c:'low'}, empty:'No visible text was detected in this image.'},
+    privacy:{ summary:'No sensitive objects detected', tag:{t:'Low',c:'low'}, empty:'No faces, plates, QR codes or documents were detected.'},
+    forensic:{
+      summary:'No manipulation signs · single compression',
+      tag:{t:'Low',c:'low'}, score:15, region:'None', gens:'1 (consistent)', conflict:'None'
+    },
+    ai:{
+      summary:'6% likely AI-generated',
+      tag:{t:'Low',c:'low'}, score:6, conf:'High',
+      signals:[['down','Base classifier','8%'],['down','Consistent camera EXIF present',''],['down','Natural sensor noise detected','']]
+    },
+    region:{
+      summary:'Insufficient evidence for a specific region',
+      tag:{t:'Insufficient',c:'mod'}, sufficient:false,
+      chain:[['l','Tea-plantation scene cue (corroborating only)'],['l','No plate, STD code or place name detected']]
+    },
+    recs:[
+      ['ok','No sensitive content was detected. This image looks safe to share as it is.'],
+      ['info','No location metadata is embedded, so sharing won’t reveal where it was taken.']
+    ]
+  },
+
+  /* ---- likely AI-generated, metadata stripped ---- */
+  portrait:{
+    session:'c4a9-8d02', ph:'portrait',
+    auth:{score:34, level:'Moderate Concern', conf:'Medium'},
+    priv:{score:22, band:'Low', cls:'low'},
+    forensic:{score:41, txt:'Moderate'},
+    ai:{score:87, txt:'High · high confidence'},
+    metadata:{
+      summary:'Metadata absent or stripped',
+      tag:{t:'Metadata stripped',c:'warn'},
+      kv:[['Camera','—'],['GPS','—'],['Captured','—'],['Editing software','—'],['Format','PNG'],['Color profile','sRGB']],
+      indicators:[['warn','Metadata absent or stripped (itself a signal)'],['','No camera information present']]
+    },
+    ocr:{
+      summary:'Garbled text artifact detected',
+      tag:{t:'1 artifact',c:'warn'}, overlay:'portrait',
+      findings:[['warn','Non-linguistic text fragment “a’lieﬂ” (low confidence)']]
+    },
+    privacy:{
+      summary:'Face × 1 (appears synthetic)',
+      tag:{t:'Low',c:'low'}, overlay:'portrait', boxes:'portrait-face',
+      objects:[['Face × 1','0.83']]
+    },
+    forensic:{
+      summary:'Unusually uniform error levels',
+      tag:{t:'Moderate',c:'mod'}, score:41, region:'Uniform low error level (atypical)', gens:'N/A (PNG)', conflict:'ELA pattern lacks camera-sensor noise'
+    },
+    ai:{
+      summary:'87% likely AI-generated',
+      tag:{t:'High',c:'high'}, score:87, conf:'High',
+      signals:[['up','Base classifier','82%'],['up','No camera metadata present',''],['up','Uniform error level typical of generators',''],['up','Garbled-text artifact detected','']]
+    },
+    region:{
+      summary:'Insufficient evidence for a specific region',
+      tag:{t:'Insufficient',c:'mod'}, sufficient:false,
+      chain:[['l','No plate, STD code, place name or scene cue detected']]
+    },
+    recs:[
+      ['primary','Several signals suggest this image is AI-generated. Verify the source before treating it as a real photo.'],
+      ['info','This is a probabilistic estimate, not a determination. AI-detection accuracy varies and can be wrong.']
+    ]
+  }
+};
+/* the low-quality scan reuses hill's data but marks OCR degraded */
+CASES.scan = JSON.parse(JSON.stringify(CASES.hill));
+CASES.scan.session='d1f8-3b60'; CASES.scan.ph='scan';
+CASES.scan.auth={score:79, level:'Low Concern', conf:'Low'};
+CASES.scan.ocr={degraded:true, summary:'Text check unavailable', tag:{t:'Skipped',c:'warn'}};
+
+/* pipeline stage labels */
+const STAGES = [
+  ['Upload received','upload'],
+  ['Reading metadata','metadata'],
+  ['Reading text (OCR)','ocr'],
+  ['Detecting sensitive objects','privacy'],
+  ['Checking for manipulation','forensics'],
+  ['Estimating AI generation','ai'],
+  ['Inferring region','regional'],
+  ['Scoring authenticity','scoring'],
+  ['Preparing report','report']
+];
+
+/* ============================================================ */
+let state = { selected:null, currentCase:null, timer:null };
+const $ = id => document.getElementById(id);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function go(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $('screen-'+name).classList.add('active');
+  window.scrollTo(0,0);
+  // hide top actions on landing for a cleaner Google-like home
+  $('topActions').style.visibility = (name==='landing') ? 'visible':'visible';
+}
+
+/* ---------- upload selection ---------- */
+function selectSample(key){
+  const f = FILES[key];
+  if(!f){ return; }
+  state.selected = key;
+  go('landing');
+  $('uploadEmpty').style.display='none';
+  $('uploadSelected').style.display='block';
+  $('selThumb').className='photo '+PHOTOS[f.ph];
+  $('selName').textContent=f.name;
+  $('selSize').textContent=f.size;
+  $('consentBox').checked=false;
+  $('selError').innerHTML='';
+  if(f.tooBig){
+    $('selError').innerHTML =
+      '<div class="banner err"><svg class="bi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01" stroke-linecap="round"/></svg><div>This image is <b>22 MB</b>. The maximum size is 15 MB. Choose a smaller image, or resize this one and try again.</div></div>';
+  }
+  syncAnalyzeBtn();
+}
+function clearSelection(){
+  state.selected=null;
+  $('uploadSelected').style.display='none';
+  $('uploadEmpty').style.display='block';
+}
+function syncAnalyzeBtn(){
+  const f = FILES[state.selected]||{};
+  const ok = $('consentBox').checked && !f.tooBig;
+  $('analyzeBtn').disabled = !ok;
+}
+function demoValidationError(){
+  // simulate a corrupted file that passes selection but fails server validation
+  state.selected='street';
+  selectSample('street');
+  $('selName').textContent='broken-image.jpg';
+  $('selSize').textContent='JPEG · 1.1 MB';
+  $('consentBox').checked=true; syncAnalyzeBtn();
+  $('selError').innerHTML =
+    '<div class="banner err"><svg class="bi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01" stroke-linecap="round"/></svg><div>We couldn’t read this file. It may be corrupted or not a real image. Try exporting it again or pick another. <span class="muted">(error 422)</span></div></div>';
+}
+
+/* ---------- analysis ---------- */
+function startAnalysis(){
+  const key = state.selected;
+  const f = FILES[key]||{};
+  if(f.tooBig || !$('consentBox').checked) return;
+  demoAnalyze(key);
+}
+function demoAnalyze(key){
+  // map upload key -> report case; 'fail' is a special path
+  let caseKey = key, mode='normal';
+  if(key==='fail'){ mode='fail'; caseKey='street'; }
+  else if(key==='scan'){ mode='degraded'; }
+  state.currentCase = caseKey;
+  const f = FILES[key] || FILES[caseKey] || FILES.street;
+
+  go('analyzing');
+  $('anThumb').className='photo '+PHOTOS[f.ph];
+  $('anTitle').textContent='Analyzing your image';
+  $('anSub').textContent='Running 9 checks — this usually takes a few seconds';
+  const stepsEl = $('anSteps'); stepsEl.innerHTML='';
+  STAGES.forEach((s,i)=>{
+    stepsEl.insertAdjacentHTML('beforeend',
+      `<li id="stp-${i}"><span class="mk"></span><span class="lbl">${s[0]}</span><span class="st"></span></li>`);
+  });
+
+  let i=0;
+  const total=STAGES.length;
+  const stepMs = reduce?120:460;
+  clearInterval(state.timer);
+  // activate first
+  advance();
+  function advance(){
+    // mark previous done
+    if(i>0){
+      const prev=$('stp-'+(i-1));
+      const isDegradeStage = (mode==='degraded' && STAGES[i-1][1]==='ocr');
+      prev.classList.remove('active');
+      prev.classList.add(isDegradeStage?'warn':'done');
+      prev.querySelector('.st').textContent = isDegradeStage?'unavailable':'done';
+      prev.querySelector('.mk').innerHTML = isDegradeStage?'!':'✓';
+    }
+    // fail path: stop at forensics
+    if(mode==='fail' && i===4){
+      $('stp-'+i).classList.add('warn');
+      $('stp-'+i).querySelector('.mk').innerHTML='!';
+      $('anStatus').textContent='Something went wrong…';
+      clearInterval(state.timer);
+      setTimeout(()=>{ failReasonFor('pipeline'); go('failed'); }, reduce?200:700);
+      return;
+    }
+    if(i>=total){
+      clearInterval(state.timer);
+      $('anBar').style.width='100%'; $('anPct').textContent='100%';
+      $('anStatus').textContent='Report ready';
+      setTimeout(()=>showReport(caseKey, mode==='degraded'), reduce?150:450);
+      return;
+    }
+    const li=$('stp-'+i); li.classList.add('active'); li.querySelector('.st').textContent='running';
+    $('anStatus').textContent = STAGES[i][0]+'…';
+    const pct=Math.round(((i+1)/total)*100);
+    $('anBar').style.width=pct+'%'; $('anPct').textContent=pct+'%';
+    i++;
+    state.timer=setTimeout(advance, stepMs);
+  }
+}
+function cancelAnalysis(){ clearInterval(state.timer); go('landing'); }
+function failReasonFor(kind){
+  $('failReason').textContent = 'The image was read successfully, but the analysis pipeline stopped during the manipulation check and no report was produced. This is usually temporary — try the same image again, or a different one.';
+}
+
+/* ---------- render report ---------- */
+function showReport(caseKey, degraded){
+  const c = CASES[caseKey]; if(!c) return;
+  state.currentCase = caseKey;
+  go('report');
+
+  // summary
+  animateRing(c.auth.score);
+  $('authScore').textContent=c.auth.score;
+  $('authLevel').textContent=c.auth.level;
+  $('authConf').textContent='Authenticity · confidence '+c.auth.conf;
+  $('rSession').textContent=c.session;
+
+  // privacy sub
+  $('privVal').textContent=c.priv.score;
+  $('privBar').style.width=c.priv.score+'%';
+  const pc=c.priv.cls;
+  $('privBar').style.background = pc==='crit'?'var(--red)':pc==='high'?'var(--orange)':pc==='mod'?'var(--amber)':'var(--green)';
+  $('privDot').className='dot dot-'+pc; $('privDot').style.cssText='width:10px;height:10px;border-radius:50%;flex:none';
+  $('privBand').textContent=c.priv.band;
+  $('privBand').className='band band-'+pc;
+
+  // forensic + ai (neutral)
+  $('forVal').textContent=c.forensic.score; $('forBar').style.width=c.forensic.score+'%'; $('forTxt').textContent=c.forensic.txt;
+  $('aiVal').textContent=c.ai.score+'%'; $('aiBar').style.width=c.ai.score+'%'; $('aiTxt').textContent=c.ai.txt;
+
+  // sections
+  $('reportSections').innerHTML = buildSections(c, degraded);
+}
+function animateRing(score){
+  const circ=377, off=circ-(score/100*circ);
+  const el=$('ringProg'); el.style.transition='none'; el.style.strokeDashoffset=circ;
+  requestAnimationFrame(()=>{ el.style.transition='stroke-dashoffset .7s ease'; el.style.strokeDashoffset=off; });
+}
+
+function tagHTML(tag){
+  if(!tag) return '';
+  const map={crit:'band-crit',high:'band-high',mod:'band-mod',low:'band-low',warn:'band-mod'};
+  return `<span class="acc-tag ${map[tag.c]||'band-low'}">${tag.t}</span>`;
+}
+function acc(icon,title,summary,tag,bodyHTML,open){
+  return `<div class="acc ${open?'open':''}">
+    <button class="acc-h" onclick="this.parentNode.classList.toggle('open')">
+      <span class="acc-ic">${icon}</span>
+      <span class="acc-tt"><div class="t">${title}</div><div class="s">${summary}</div></span>
+      ${tagHTML(tag)}
+      <svg class="acc-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="acc-body"><div class="inner">${bodyHTML}</div></div>
+  </div>`;
+}
+function photoBoxes(kind){
+  if(kind==='street') return `
+    <div class="bbox" style="left:8%;top:14%;width:20%;height:26%"><span class="cap">Face 0.94</span></div>
+    <div class="bbox" style="left:36%;top:20%;width:17%;height:22%"><span class="cap">Face 0.88</span></div>
+    <div class="bbox" style="left:20%;top:66%;width:34%;height:14%"><span class="cap">Plate 0.91</span></div>
+    <div class="bbox" style="left:70%;top:30%;width:16%;height:20%"><span class="cap">QR 0.86</span></div>
+    <div class="bbox" style="left:60%;top:60%;width:30%;height:26%"><span class="cap">ID doc 0.79</span></div>`;
+  if(kind==='portrait-face') return `<div class="bbox" style="left:28%;top:16%;width:44%;height:52%"><span class="cap">Face 0.83</span></div>`;
+  return '';
+}
+function ocrBoxes(){ return `
+  <div class="bbox" style="left:12%;top:60%;width:40%;height:11%"><span class="cap">phone</span></div>
+  <div class="bbox" style="left:14%;top:74%;width:30%;height:10%"><span class="cap">name</span></div>
+  <div class="bbox" style="left:22%;top:66%;width:30%;height:9%"><span class="cap">plate</span></div>`;
+}
+
+function buildSections(c, degraded){
+  let html='';
+  const P = 'photo '+PHOTOS[c.ph];
+
+  // 1 Metadata
+  html += acc('📄','Metadata & camera info', c.metadata.summary, c.metadata.tag,
+    `<div class="cols">
+      <div><div class="field-label">Extracted fields</div><div class="kvlist">${c.metadata.kv.map(r=>`<div><span class="k">${r[0]}</span><span class="v2">${r[1]}</span></div>`).join('')}</div></div>
+      <div><div class="field-label">What this means</div><ul class="findings">${c.metadata.indicators.map(r=>`<li><span class="tag ${r[0]}">${r[0]==='crit'?'privacy':r[0]==='warn'?'note':'ok'}</span>${r[1]}</li>`).join('')}</ul></div>
+    </div>`, true);
+
+  // 2 OCR / text
+  if(c.ocr.degraded){
+    html += acc('🔤','Text & personal info', c.ocr.summary, c.ocr.tag,
+      `<div class="degraded"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><b>Text check couldn’t run on this image.</b><br>The scan was too low-contrast to read reliably, so this engine was skipped and excluded from the score. Everything else was analyzed normally. Overall confidence is lowered as a result.</div></div>`, false);
+  } else if(c.ocr.empty){
+    html += acc('🔤','Text & personal info', c.ocr.summary, c.ocr.tag, emptyBlock(c.ocr.empty), false);
+  } else {
+    html += acc('🔤','Text & personal info', c.ocr.summary, c.ocr.tag,
+      `<div class="cols">
+        <div><div class="field-label">Text found on the image</div><div class="detimg">${photoImg(P)}${c.ocr.overlay==='street'?ocrBoxes():''}</div></div>
+        <div><div class="field-label">Sensitive items</div><ul class="findings">${c.ocr.findings.map(f=>`<li><span class="tag ${f[0]==='warn'?'warn':''}">${f[0]}</span>${f[1]}</li>`).join('')}</ul></div>
+      </div>`, false);
+  }
+
+  // 3 Privacy objects
+  if(c.privacy.empty){
+    html += acc('🛡️','What this image reveals', c.privacy.summary, c.privacy.tag, emptyBlock(c.privacy.empty), false);
+  } else {
+    html += acc('🛡️','What this image reveals', c.privacy.summary, c.privacy.tag,
+      `<div class="cols">
+        <div><div class="field-label">Detected regions</div><div class="detimg">${photoImg(P)}${photoBoxes(c.privacy.boxes)}</div></div>
+        <div><div class="field-label">Detected objects</div><ul class="findings">${c.privacy.objects.map(o=>`<li><span class="tag ${c.priv.cls==='crit'?'crit':''}">obj</span>${o[0]} <span class="muted tiny" style="margin-left:auto">${o[1]}</span></li>`).join('')}</ul>
+        <div class="mini-disc" style="margin-top:12px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 8v5m0 3h.01" stroke-linecap="round"/></svg>These detections feed the Privacy risk score and the Sanitize step.</div></div>
+      </div>`, false);
+  }
+
+  // 4 Forensics / manipulation
+  html += acc('🔍','Manipulation check', c.forensic.summary, c.forensic.tag,
+    `<div class="cols">
+      <div><div class="field-label">Error-level analysis</div><div class="detimg" style="filter:contrast(1.3) saturate(.6)">${photoImg(P)}<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 55%,rgba(0,0,0,.55),rgba(0,0,0,.15))"></div><div style="position:absolute;left:10px;bottom:8px;color:#fff;font-size:11px;opacity:.85">ELA heat map</div></div><div class="tiny" style="margin-top:8px"><a href="#" onclick="toast('ELA map downloaded');return false">Download ELA map →</a></div></div>
+      <div><div class="field-label">Findings</div><div class="kvlist">
+        <div><span class="k">Suspicion score</span><span class="v2">${c.forensic.score} / 100</span></div>
+        <div><span class="k">Candidate edited region</span><span class="v2">${c.forensic.region}</span></div>
+        <div><span class="k">Compression generations</span><span class="v2">${c.forensic.gens}</span></div>
+        <div><span class="k">Cross-check vs metadata</span><span class="v2">${c.forensic.conflict}</span></div>
+      </div></div>
+    </div>`, false);
+
+  // 5 AI assessment
+  html += acc('🤖','AI-generation likelihood', c.ai.summary, c.ai.tag,
+    `<div style="max-width:560px">
+      <div class="kvlist" style="margin-bottom:12px"><div><span class="k">Estimated probability</span><span class="v2">${c.ai.score}%</span></div><div><span class="k">Confidence</span><span class="v2">${c.ai.conf}</span></div></div>
+      <div class="field-label">How we got there</div>
+      <ul class="signals">${c.ai.signals.map(s=>`<li><span class="sig-arrow ${s[0]==='up'?'sig-up':'sig-down'}">${s[0]==='up'?'▲':'▼'}</span><span style="flex:1">${s[1]}</span>${s[2]?`<span class="muted tiny">${s[2]}</span>`:''}</li>`).join('')}</ul>
+      <div class="mini-disc"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 8v5m0 3h.01" stroke-linecap="round"/></svg>Shown as a probability, never a yes/no label. AI-detection is imperfect and degrades as generators improve.</div>
+    </div>`, false);
+
+  // 6 Region
+  let regionBody;
+  if(c.region.sufficient){
+    regionBody = `<div class="region-rank">${c.region.ranked.map(r=>`<div class="rr"><div class="name">${r[0]}</div><div class="barwrap"><i style="width:${r[1]}%"></i></div><div class="p">${r[1]}%</div></div>`).join('')}</div>
+      <div class="field-label">Evidence chain</div>
+      <ul class="evchain">${c.region.chain.map(e=>`<li><span class="ev-conf ${e[0]==='h'?'ev-h':'ev-l'}">${e[0]==='h'?'high':'low'}</span>${e[1]}</li>`).join('')}</ul>`;
+  } else {
+    regionBody = `<div class="banner warn" style="margin-top:0"><svg class="bi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5m0 3h.01" stroke-linecap="round"/></svg><div><b>Not enough evidence to name a region.</b> Only weak, corroborating-only cues were found — no vehicle plate, STD code or specific place name — so TruthLens won’t guess.</div></div>
+      <div class="field-label" style="margin-top:14px">What was found</div>
+      <ul class="evchain">${c.region.chain.map(e=>`<li><span class="ev-conf ev-l">low</span>${e[1]}</li>`).join('')}</ul>`;
+  }
+  regionBody += `<div class="mini-disc"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>This is inference from visible clues — <b>not GPS geolocation</b>. A staged or relocated photo (e.g. a Kerala plate photographed elsewhere) can mislead it.</div>`;
+  html += acc('📍','Probable region', c.region.summary, c.region.tag, regionBody, false);
+
+  // 7 Recommendations (always open, action-focused)
+  html += `<div class="acc open"><button class="acc-h" onclick="this.parentNode.classList.toggle('open')">
+    <span class="acc-ic" style="background:var(--green-bg);color:var(--green)">✓</span>
+    <span class="acc-tt"><div class="t">Recommendations</div><div class="s">What to do next</div></span>
+    <svg class="acc-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="acc-body"><div class="inner"><ul class="rec-list">
+      ${c.recs.map(r=>`<li class="rec-${r[0]}"><span class="rec-ic">${r[0]==='primary'?'!':r[0]==='ok'?'✓':'i'}</span><div>${r[1]}</div></li>`).join('')}
+    </ul>
+    ${c.priv.cls==='crit'?'<div style="margin-top:16px"><button class="btn primary" onclick="startSanitize()">Sanitize image →</button></div>':''}
+    </div></div></div>`;
+
+  return html;
+}
+function photoImg(cls){ return `<div class="${cls}" style="position:absolute;inset:0"></div>`; }
+function emptyBlock(msg){
+  return `<div class="empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#C9CDD3" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9 12h6" stroke-linecap="round"/></svg>${msg}</div>`;
+}
+
+/* ---------- sanitize ---------- */
+function startSanitize(){
+  const c = CASES[state.currentCase] || CASES.street;
+  go('sanitize');
+  $('sanResult').style.display='none';
+  $('sanLoading').style.display='block';
+  setTimeout(()=>{
+    $('sanLoading').style.display='none';
+    $('sanResult').style.display='block';
+    renderSanitize(c);
+  }, reduce?200:1100);
+}
+function renderSanitize(c){
+  const P='photo '+PHOTOS[c.ph];
+  const boxes = c.privacy.boxes || (c.priv.cls==='crit'?'street':'');
+  $('sanBefore').innerHTML = photoImg(P)+photoBoxes(boxes);
+  // sanitized: blur regions
+  let after = photoImg(P);
+  if(boxes==='street'){
+    after += `<div class="bbox blurred" style="left:8%;top:14%;width:20%;height:26%"></div>
+      <div class="bbox blurred" style="left:36%;top:20%;width:17%;height:22%"></div>
+      <div class="bbox blurred" style="left:20%;top:66%;width:34%;height:14%"></div>
+      <div class="redact" style="left:70%;top:30%;width:16%;height:20%"></div>`;
+  } else if(boxes==='portrait-face'){
+    after += `<div class="bbox blurred" style="left:28%;top:16%;width:44%;height:52%"></div>`;
+  }
+  $('sanAfter').innerHTML = after;
+
+  // summary based on case
+  const items=[];
+  items.push('EXIF & GPS metadata removed');
+  const objs = c.privacy.objects||[];
+  objs.forEach(o=>{
+    if(/Face/.test(o[0])) items.push(o[0].replace('Face','face(s)')+' blurred');
+    else if(/plate/i.test(o[0])) items.push('number plate blurred');
+    else if(/QR/.test(o[0])) items.push('QR code redacted');
+  });
+  if(items.length===1) items.push('no sensitive regions needed blurring');
+  $('sanSummary').innerHTML = items.map(t=>`<li><span class="check">✓</span>${t}</li>`).join('');
+}
+
+/* ---------- modal / toast / prototype map ---------- */
+function openModal(id){ $(id).classList.add('show'); }
+function closeModal(id){ $(id).classList.remove('show'); }
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('show'); }));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ document.querySelectorAll('.overlay.show').forEach(o=>o.classList.remove('show')); closePM(); } });
+
+let toastT;
+function toast(msg){ $('toastMsg').textContent=msg; $('toast').classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>$('toast').classList.remove('show'),2400); }
+
+function togglePM(){ $('pmPanel').classList.toggle('show'); }
+function closePM(){ $('pmPanel').classList.remove('show'); }
+
+/* init */
+go('landing');
+</script>
+</body>
+</html>
