@@ -87,7 +87,7 @@ return toReport(raw);          // unknown in, Report out
 risk_level: oneOf(raw.risk_level, RISK_LEVELS, riskLevelFromScore(authenticity)),
 ```
 
-Note it re-applies *documented rules*, it does not invent them. `sufficient_evidence` defaults by re-checking FR-8.7's actual condition (is there a plate, STD code, or place name at ≥50% confidence?) rather than guessing `true`.
+Note it re-applies *documented rules*, it does not invent them.
 
 ---
 

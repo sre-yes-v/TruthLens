@@ -25,7 +25,6 @@ import { OCRSection } from "./OCRSection";
 import { PrivacySection } from "./PrivacySection";
 import { ForensicsSection } from "./ForensicsSection";
 import { AIAnalysisSection } from "./AIAnalysisSection";
-import { RegionalEvidenceSection } from "./RegionalEvidenceSection";
 import { RecommendationsSection } from "./RecommendationsSection";
 import { useReport } from "@/hooks/useReport";
 import { describeError, isExpiredError } from "@/lib/utils/errors";
@@ -117,8 +116,6 @@ export function ReportView({ reportId }: { reportId: string }) {
         />
 
         <AIAnalysisSection ai={report.ai_assessment} />
-
-        <RegionalEvidenceSection regional={report.regional_evidence} />
 
         <RecommendationsSection
           recommendations={report.recommendations}

@@ -25,12 +25,8 @@ import type {
   OcrFindings,
   PrivacyBand,
   PrivacyFindings,
-  ProbableRegion,
   Recommendation,
   RecommendationSeverity,
-  RegionalEvidence,
-  RegionalEvidenceItem,
-  RegionalEvidenceType,
   Report,
   RiskLevel,
 } from "@/types/report";
@@ -99,14 +95,6 @@ const OCR_CATEGORIES = [
   "location",
   "vehicle",
   "artifact",
-] as const;
-const REGIONAL_TYPES = [
-  "vehicle_plate",
-  "std_code",
-  "place_name",
-  "malayalam_text",
-  "scene_cue",
-  "other",
 ] as const;
 
 /* ------------------------------------------------------------------
@@ -313,54 +301,6 @@ function toAiAssessment(value: unknown, topLevelScore: number): AiAssessment {
   };
 }
 
-function toRegionalEvidence(value: unknown): RegionalEvidence {
-  const raw = obj(value);
-
-  const chain: RegionalEvidenceItem[] = list(raw.evidence_chain).map((entry) => {
-    const item = obj(entry);
-    return {
-      type: oneOf<RegionalEvidenceType>(item.type, REGIONAL_TYPES, "other"),
-      value: str(item.value),
-      confidence: score(item.confidence),
-    };
-  });
-
-  const regions: ProbableRegion[] = list(raw.probable_regions).map((entry) => {
-    const region = obj(entry);
-    return { region: str(region.region), confidence: score(region.confidence) };
-  });
-
-  // FR-8.7: a region may only be named when at least one medium-or-higher
-  // confidence item (plate, STD code, place name) is present. If the backend
-  // doesn't state sufficiency, we apply that rule rather than assuming yes.
-  const strongTypes: RegionalEvidenceType[] = [
-    "vehicle_plate",
-    "std_code",
-    "place_name",
-  ];
-  const hasStrongEvidence = chain.some(
-    (item) => strongTypes.includes(item.type) && item.confidence >= 50,
-  );
-
-  return {
-    status: toEngineStatus(raw),
-    summary: str(raw.summary, "Regional evidence analysed"),
-    unavailable_reason: typeof raw.unavailable_reason === "string"
-      ? raw.unavailable_reason
-      : undefined,
-    evidence_chain: chain,
-    probable_regions: regions,
-    sufficient_evidence: bool(
-      raw.sufficient_evidence,
-      hasStrongEvidence && regions.length > 0,
-    ),
-    regional_confidence_score:
-      typeof raw.regional_confidence_score === "number"
-        ? score(raw.regional_confidence_score)
-        : undefined,
-  };
-}
-
 /**
  * SRS §9.3 types recommendations as plain strings, while the prototype
  * colours each one by severity. We accept both: an object keeps its
@@ -410,7 +350,6 @@ export function toReport(value: unknown): Report {
     privacy: toPrivacy(raw.privacy, privacyScore),
     forensics: toForensics(raw.forensics, forensicScore),
     ai_assessment: toAiAssessment(raw.ai_assessment, aiScore),
-    regional_evidence: toRegionalEvidence(raw.regional_evidence),
     recommendations: toRecommendations(raw.recommendations),
 
     created_at: str(raw.created_at, new Date().toISOString()),

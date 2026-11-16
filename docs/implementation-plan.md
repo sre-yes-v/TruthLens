@@ -151,7 +151,7 @@ The prototype is a single-page state machine (`go('screen-x')`). That is fine fo
 |---|---|
 | `/` | `UploadDropzone` · `SampleImageChips` · `FilePreviewCard` · `ConsentCheckbox` · `DisclaimerStrip` · `LandingFooter` |
 | `/analyze/[sessionId]` | `AnalysisHeader` · `AnalysisProgress` · `AnalysisStepper` · `SanitizeLockNote` · `AnalysisFailed` |
-| `/report/[reportId]` | `DisclaimerBanner` · `ReportActions` · `ReportMeta` · `ScoreSummary`(`ScoreRing` + `SubScore`×3) · `MetadataSection` · `OCRSection` · `PrivacySection` · `ForensicsSection` · `AIAnalysisSection` · `RegionalEvidenceSection` · `RecommendationsSection` |
+| `/report/[reportId]` | `DisclaimerBanner` · `ReportActions` · `ReportMeta` · `ScoreSummary`(`ScoreRing` + `SubScore`×3) · `MetadataSection` · `OCRSection` · `PrivacySection` · `ForensicsSection` · `AIAnalysisSection` · `RecommendationsSection` |
 | `/sanitize/[sessionId]` | `SanitizeProgress` · `BeforeAfterViewer` · `SanitizationSummary` · `SanitizeActions` |
 | `/admin` | `SystemHealth` · `AdminStats` · `EngineFailureList` · `ActivityLog` |
 | global | `Header` · `PrivacyModal` · `DownloadModal` · `PrototypeMap` (flag-gated) |
@@ -201,7 +201,6 @@ Nine SRS events → nine prototype stepper rows. Driven by a typed table, not JS
 | `privacy` | Detecting sensitive objects | `privacy_done` |
 | `forensics` | Checking for manipulation | `forensics_done` |
 | `ai_assessment` | Estimating AI generation | `ai_assessment_done` |
-| `regional` | Inferring region | `regional_done` |
 | `scoring` | Scoring authenticity | `scoring_done` |
 | `report` | Preparing report | `report_ready` |
 

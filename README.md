@@ -90,8 +90,8 @@ Runs the entire frontend against in-memory sample data — no backend, no networ
 
 | Sample | Demonstrates |
 |---|---|
-| Street photo with ID card | Critical privacy risk, strong Kerala regional evidence |
-| Landscape photo | Likely authentic, empty findings, insufficient regional evidence |
+| Street photo with ID card | Critical privacy risk |
+| Landscape photo | Likely authentic, empty findings |
 | Possibly AI-generated | High AI probability, metadata stripped |
 | Low-quality scan | A **degraded engine** — pipeline completes with OCR unavailable |
 

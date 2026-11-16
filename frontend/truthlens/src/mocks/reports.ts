@@ -6,8 +6,8 @@
  * screen cannot be built, reviewed, or demonstrated. These four cases cover
  * the outcomes the UI has to handle:
  *
- *   street   — critical privacy risk, strong Kerala regional evidence
- *   hill     — clean image, likely authentic, insufficient regional evidence
+ *   street   — critical privacy risk
+ *   hill     — clean image, likely authentic
  *   portrait — likely AI-generated, metadata stripped
  *   scan     — a degraded engine (OCR unavailable), pipeline still completes
  *
@@ -174,23 +174,6 @@ const streetReport: Report = {
     ],
   },
 
-  regional_evidence: {
-    status: "ok",
-    summary: "Probable region: Ernakulam",
-    sufficient_evidence: true,
-    regional_confidence_score: 74,
-    probable_regions: [
-      { region: "Ernakulam", confidence: 74 },
-      { region: "Alappuzha", confidence: 18 },
-    ],
-    evidence_chain: [
-      { type: "vehicle_plate", value: "KL07 plate → Ernakulam district", confidence: 85 },
-      { type: "std_code", value: "STD code 0484 → Ernakulam", confidence: 80 },
-      { type: "malayalam_text", value: "Malayalam text present (corroborating)", confidence: 30 },
-      { type: "scene_cue", value: "Backwater scene cue (corroborating)", confidence: 25 },
-    ],
-  },
-
   recommendations: [
     {
       severity: "action",
@@ -274,18 +257,6 @@ const hillReport: Report = {
       { direction: "decreases", label: "Base classifier", value: "8%" },
       { direction: "decreases", label: "Consistent camera EXIF present" },
       { direction: "decreases", label: "Natural sensor noise detected" },
-    ],
-  },
-
-  regional_evidence: {
-    status: "ok",
-    summary: "Insufficient evidence for a specific region",
-    // FR-8.7 in action: scene cues alone are not enough to name a region.
-    sufficient_evidence: false,
-    probable_regions: [],
-    evidence_chain: [
-      { type: "scene_cue", value: "Tea-plantation scene cue (corroborating only)", confidence: 25 },
-      { type: "other", value: "No plate, STD code or place name detected", confidence: 0 },
     ],
   },
 
@@ -387,20 +358,6 @@ const portraitReport: Report = {
       { direction: "increases", label: "No camera metadata present" },
       { direction: "increases", label: "Uniform error level typical of generators" },
       { direction: "increases", label: "Garbled-text artifact detected" },
-    ],
-  },
-
-  regional_evidence: {
-    status: "ok",
-    summary: "Insufficient evidence for a specific region",
-    sufficient_evidence: false,
-    probable_regions: [],
-    evidence_chain: [
-      {
-        type: "other",
-        value: "No plate, STD code, place name or scene cue detected",
-        confidence: 0,
-      },
     ],
   },
 

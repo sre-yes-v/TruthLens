@@ -12,7 +12,7 @@ components/
 └── <feature>/ SPECIFIC — knows about reports, uploads, sanitization
 ```
 
-The test is simple: **could this component appear in a completely different application?** `Button`, `Modal`, `Accordion` — yes, so they live in `ui/`. `ScoreSummary`, `RegionalEvidenceSection` — no, so they live in `report/`.
+The test is simple: **could this component appear in a completely different application?** `Button`, `Modal`, `Accordion` — yes, so they live in `ui/`. `ScoreSummary`, `PrivacySection` — no, so they live in `report/`.
 
 This is not folder decoration. It tells you the dependency direction: feature components import from `ui/`, never the reverse. A change to `PrivacySection` cannot break `Button`.
 
@@ -79,7 +79,6 @@ ReportView                        ← 4 states, then composition. ~150 lines.
 ├── PrivacySection                ← FR-4.x
 ├── ForensicsSection              ← FR-6.x
 ├── AIAnalysisSection             ← FR-7.x
-├── RegionalEvidenceSection       ← FR-8.x
 └── RecommendationsSection        ← FR-11.2
 ```
 
@@ -112,7 +111,6 @@ This is a forensic tool, so these must stay distinct:
 
 Some rules are not styling — they are behaviour the SRS mandates:
 
-- **`RegionalEvidenceSection`** — FR-8.7: when `sufficient_evidence` is false it shows "not enough evidence to name a region" and the raw clues. It never falls back to displaying the top candidate anyway. FR-8.8's "not GPS geolocation" caveat renders unconditionally.
 - **`AIAnalysisSection`** — FR-7.6: a probability plus a confidence level plus the contributing signals. Never a yes/no label. The browser test asserts the strings "AI-generated: Yes/No" never appear.
 - **`ReportHeader`** — FR-11.5: the disclaimer is first, not dismissible, and inside the sticky region so it stays visible while scrolling.
 - **`ScoreSummary`** — NFR-7.2: every score carries a one-line plain-language explanation, not just a number.

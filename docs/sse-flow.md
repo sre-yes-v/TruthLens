@@ -44,7 +44,6 @@ SSE beats WebSockets here because the data only flows one way. The browser never
 | `privacy` | Detecting sensitive objects | `privacy_done` |
 | `forensics` | Checking for manipulation | `forensics_done` |
 | `ai_assessment` | Estimating AI generation | `ai_assessment_done` |
-| `regional` | Inferring region | `regional_done` |
 | `scoring` | Scoring authenticity | `scoring_done` |
 | `report` | Preparing report | `report_ready` |
 

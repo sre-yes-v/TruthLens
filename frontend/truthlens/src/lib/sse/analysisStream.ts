@@ -34,7 +34,6 @@ export const ANALYSIS_EVENT_NAMES: readonly AnalysisEventName[] = [
   "privacy_done",
   "forensics_done",
   "ai_assessment_done",
-  "regional_done",
   "scoring_done",
   "report_ready",
   "error",

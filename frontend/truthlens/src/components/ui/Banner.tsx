@@ -1,8 +1,7 @@
 /**
  * The prototype's `.banner` — an inline message block in one of four tones.
  *
- * Used for upload validation errors, the "insufficient regional evidence"
- * notice, and network failures. Errors get `role="alert"` so a screen reader
+ * Used for upload validation errors and network failures. Errors get `role="alert"` so a screen reader
  * announces them the moment they appear; softer tones do not, to avoid
  * interrupting the user for informational text.
  */
@@ -86,7 +85,7 @@ export function DegradedNotice({ reason }: { reason: string }) {
 /**
  * The prototype's `.mini-disc` — a quiet caveat under a section's content.
  * Used where the SRS requires a standing limitation to be visible
- * (FR-7.6 probabilistic framing, FR-8.8 "not GPS geolocation").
+ * (e.g. FR-7.6 probabilistic framing).
  */
 export function MiniDisclaimer({
   icon,

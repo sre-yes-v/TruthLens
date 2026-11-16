@@ -5,9 +5,9 @@
  *   • The top-level scores come from SRS §9.3 (the documented `report_ready`
  *     payload) verbatim.
  *   • §9.3 is explicitly "abbreviated", but FR-11.1 requires the report to
- *     contain Metadata, OCR, Privacy, Forensic, AI, Regional and
+ *     contain Metadata, OCR, Privacy, Forensic, AI and
  *     Recommendations sections. Those sub-documents are modelled here from
- *     their own functional requirements (FR-2.x … FR-8.x) and from the
+ *     their own functional requirements (FR-2.x … FR-7.x) and from the
  *     sections the prototype actually renders.
  *   • Fields the SRS does not pin down are marked optional and listed in
  *     docs/implementation-notes.md.
@@ -183,48 +183,7 @@ export interface AiAssessment extends EngineSection {
 }
 
 /* ============================================================
-   6. Kerala regional evidence (FR-8.x)
-   ============================================================ */
-
-/** FR-8.6: what kind of clue this evidence item is. */
-export type RegionalEvidenceType =
-  | "vehicle_plate" // FR-8.1
-  | "std_code" // FR-8.4
-  | "place_name" // FR-8.3
-  | "malayalam_text" // FR-8.2
-  | "scene_cue" // FR-8.5 — corroborating only
-  | "other";
-
-export interface RegionalEvidenceItem {
-  type: RegionalEvidenceType;
-  /** SRS §9.3 names this field `value`. */
-  value: string;
-  /** 0–100. */
-  confidence: number;
-}
-
-export interface ProbableRegion {
-  region: string;
-  /** 0–100. */
-  confidence: number;
-}
-
-export interface RegionalEvidence extends EngineSection {
-  /** SRS §9.3. */
-  evidence_chain: RegionalEvidenceItem[];
-  /** FR-8.9: a ranked list, not a single guess. */
-  probable_regions: ProbableRegion[];
-  /**
-   * FR-8.7: false when only weak/corroborating evidence was found. The UI
-   * must then say "insufficient evidence" — it must NOT show the top
-   * candidate as if it were a conclusion.
-   */
-  sufficient_evidence: boolean;
-  regional_confidence_score?: number;
-}
-
-/* ============================================================
-   7. Recommendations (FR-11.2)
+   6. Recommendations (FR-11.2)
    ============================================================ */
 
 /** Drives the icon and colour of a recommendation row in the prototype. */
@@ -264,7 +223,6 @@ export interface Report {
   privacy: PrivacyFindings;
   forensics: ForensicFindings;
   ai_assessment: AiAssessment;
-  regional_evidence: RegionalEvidence;
   recommendations: Recommendation[];
 
   /* --- lifecycle --- */

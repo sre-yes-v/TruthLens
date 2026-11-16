@@ -132,8 +132,6 @@ Not just displayed — these are rules the code holds to, and each is worth bein
 | Requirement | Where |
 |---|---|
 | FR-7.6 — never a binary AI verdict | `AIAnalysisSection` shows probability + confidence + signals; asserted by the browser test |
-| FR-8.7 — no region without medium+ evidence | `RegionalEvidenceSection` shows "insufficient evidence"; `mappers.ts` re-derives sufficiency when the backend omits it |
-| FR-8.8 — regional inference is not GPS | caveat renders unconditionally |
 | FR-9.6 / FR-11.5 — disclaimer prominent | first element of `ReportHeader`, non-dismissible, inside the sticky region; also on the landing page |
 | FR-5.7 — no sanitizing before the report | 409 handled with the actual reason; no retry button, because retrying cannot help |
 | NFR-2.1 — degraded ≠ empty | `EngineStatus` per section; amber `DegradedNotice` vs grey `EmptyState` |

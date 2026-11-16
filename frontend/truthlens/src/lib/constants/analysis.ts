@@ -33,7 +33,6 @@ export const ANALYSIS_STEPS: readonly AnalysisStepDefinition[] = [
     label: "Estimating AI generation",
     completedBy: "ai_assessment_done",
   },
-  { id: "regional", label: "Inferring region", completedBy: "regional_done" },
   { id: "scoring", label: "Scoring authenticity", completedBy: "scoring_done" },
   { id: "report", label: "Preparing report", completedBy: "report_ready" },
 ] as const;

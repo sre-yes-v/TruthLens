@@ -98,7 +98,7 @@ Anything with a lifecycle: `useImageUpload`, `useAnalysisStream`, `useReport`, `
             │                                         │
             │        ┌────────────────────────────────┴──────────────────────┐
             │        ▼           ▼            ▼           ▼          ▼       ▼
-            │   ScoreSummary  Metadata  OCR  Privacy  Forensics  AI  Regional  Recommendations
+            │   ScoreSummary  Metadata  OCR  Privacy  Forensics  AI  Recommendations
             │
             └─► "Sanitize image" ──► /sanitize/{session}?report={reportId}
                                               │
